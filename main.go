@@ -6,9 +6,11 @@ import (
 	"net/http"
 
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/labstack/echo"
-	"github.com/labstack/echo/middleware"
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 	_ "github.com/walf443/go-sql-tracer"
+
+	"github.com/labstack/echo-contrib/prometheus"
 )
 
 type Sheet struct {
@@ -19,6 +21,7 @@ type Sheet struct {
 }
 
 var db *sql.DB
+
 var sheets []*Sheet // declare as global variable
 
 func getSheets(tx *sql.Tx) ([]*Sheet, error) {
@@ -56,6 +59,9 @@ func main() {
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 
+	p := prometheus.NewPrometheus("echo", nil)
+	p.Use(e)
+
 	// Routing
 	e.GET("/", func(c echo.Context) error {
 		return c.String(http.StatusOK, "Hello World")
@@ -81,5 +87,5 @@ func main() {
 		return c.JSON(http.StatusOK, sheets)
 	})
 
-	e.Start(":8000")
+	e.Logger.Fatal(e.Start(":8000"))
 }
