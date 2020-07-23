@@ -18,6 +18,29 @@ type Sheet struct {
 }
 
 var db *sql.DB
+var sheets []*Sheet // declare as global variable
+
+func getSheets(tx *sql.Tx) ([]*Sheet, error) {
+
+	rows, err := tx.Query("SELECT * FROM sheets")
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var sheets []*Sheet
+
+	for rows.Next() {
+		var s Sheet
+		if err := rows.Scan(&s.ID, &s.Rank, &s.Num, &s.Price); err != nil {
+			log.Print(err)
+			return nil, err
+		}
+		sheets = append(sheets, &s)
+	}
+
+	return sheets, nil
+}
 
 func main() {
 
@@ -28,41 +51,34 @@ func main() {
 	}
 
 	e := echo.New()
-	// 全てのリクエストで差し込みたいミドルウェア（ログとか）はここ
+	// Required to define Middleware if want to apply for all requests(logger etc.)
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 
-	// ルーティング
+	// Routing
 	e.GET("/", func(c echo.Context) error {
 		return c.String(http.StatusOK, "Hello World")
 	})
 
 	e.GET("/sheets", func(c echo.Context) error {
-		tx, err := db.Begin()
-		if err != nil {
-			return err
-		}
-		defer tx.Commit()
 
-		rows, err := tx.Query("SELECT * FROM sheets")
+		// fetch from DB if sheets has no data
+		if sheets == nil {
+			tx, err := db.Begin()
+			if err != nil {
+				return err
+			}
+			defer tx.Commit()
 
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		var sheets []Sheet
-
-		for rows.Next() {
-			var s Sheet
-			if err := rows.Scan(&s.ID, &s.Rank, &s.Num, &s.Price); err != nil {
+			log.Println("Call getSheets")
+			sheets, err = getSheets(tx)
+			if err != nil {
 				log.Fatal(err)
 			}
-			sheets = append(sheets, s)
 		}
 
 		return c.JSON(http.StatusOK, sheets)
 	})
 
-	// サーバー起動
 	e.Start(":8000")
 }
