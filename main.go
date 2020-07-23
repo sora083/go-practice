@@ -8,6 +8,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
+	_ "github.com/walf443/go-sql-tracer"
 )
 
 type Sheet struct {
@@ -45,7 +46,7 @@ func getSheets(tx *sql.Tx) ([]*Sheet, error) {
 func main() {
 
 	dbconf := "root:@tcp(localhost:3306)/torb"
-	db, err := sql.Open("mysql", dbconf)
+	db, err := sql.Open("mysql:trace", dbconf)
 	if err != nil {
 		log.Fatal(err)
 	}
