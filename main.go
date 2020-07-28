@@ -10,6 +10,10 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 	_ "github.com/walf443/go-sql-tracer"
 
+	_ "net/http/pprof"
+
+	"github.com/felixge/fgprof"
+
 	"github.com/labstack/echo-contrib/prometheus"
 )
 
@@ -53,6 +57,12 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	// fgprof
+	http.DefaultServeMux.Handle("/debug/fgprof", fgprof.Handler())
+	go func() {
+		log.Println(http.ListenAndServe("localhost:6060", nil))
+	}()
 
 	e := echo.New()
 	// Required to define Middleware if want to apply for all requests(logger etc.)

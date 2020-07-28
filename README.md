@@ -12,6 +12,7 @@ goの勉強用
 * [Realizeを使ってGoでホットリロードを実現する](https://qiita.com/godgarden/items/f73e4a717f1a27b9a3b0)
 * [Prometheusを使ってISUCON9の監視をやってみる](https://qiita.com/K-jun/items/17a66c3d691e94bd8c45)
 * [Prometheus Middleware](https://echo.labstack.com/middleware/prometheus)
+* [felixge/fgprof](https://github.com/felixge/fgprof)
 
 #### Prometheus
 ```

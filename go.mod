@@ -3,6 +3,7 @@ module github.com/sora083/go-practice
 go 1.12
 
 require (
+	github.com/felixge/fgprof v0.9.1
 	github.com/go-sql-driver/mysql v1.5.0
 	github.com/labstack/echo v3.3.10+incompatible
 	github.com/labstack/echo-contrib v0.9.0
