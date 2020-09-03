@@ -5,6 +5,7 @@ goの勉強用
 * DBからのSELECT結果をグローバル変数に設定
 * SQLのログ出力
 * Prometheusの導入
+* Redisとの接続
 
 ### Reference
 * [labstack/echo](https://github.com/labstack/echo) -> webフレームワーク
@@ -13,6 +14,8 @@ goの勉強用
 * [Prometheusを使ってISUCON9の監視をやってみる](https://qiita.com/K-jun/items/17a66c3d691e94bd8c45)
 * [Prometheus Middleware](https://echo.labstack.com/middleware/prometheus)
 * [felixge/fgprof](https://github.com/felixge/fgprof)
+* [Redigo](https://github.com/gomodule/redigo)
+* [go-funk](https://github.com/thoas/go-funk)
 
 #### Prometheus
 ```
